@@ -289,21 +289,6 @@ GEMINI_API_KEY=your_api_key_here
 GEMINI_MODEL=gemini-1.5-flash
 ```
 
-Do not commit `.env` or API keys.
-
-## Hackathon Demo Script
-
-1. Open Chrome with CyberShield loaded.
-2. Open the safe demo page and show the low-risk baseline.
-3. Open the phishing demo page.
-4. Show the Protection Mode warning.
-5. Click Show Me Why and explain the evidence cards.
-6. Open the CyberShield SOC dashboard.
-7. Show incident timeline and risk stats.
-8. Enable Demo Mode if judges want a richer dashboard view.
-9. Explain the privacy guarantee: password values are never read.
-10. Explain the architecture: deterministic detection decides, optional AI only explains.
-
 ## Security and Privacy Principles
 
 CyberShield was built with a privacy-first security model:
@@ -372,6 +357,3 @@ CyberShield is a Chrome extension that detects suspicious and phishing-like web 
 - AI explanations require a separately running backend and optional API key.
 - Detection is heuristic and explainable; it does not claim perfect phishing detection.
 
-## License
-
-This project was built as a hackathon MVP. Add a license before public production use.
