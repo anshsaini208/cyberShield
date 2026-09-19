@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CyberShield | Real-Time Browser Security</title>
+    <meta
+      name="description"
+      content="CyberShield is a browser extension that detects phishing, credential harvesting, and suspicious login pages in real time."
+    />
+    <style>
+      :root {
+        --bg: #07111f;
+        --panel: #0d1b2a;
+        --panel-2: #101f2d;
+        --text: #eaf3ff;
+        --muted: #9ec1db;
+        --primary: #30d0a1;
+        --primary-2: #4ade80;
+        --accent: #5ec2ff;
+        --warning: #fbbf24;
+        --danger: #ef4444;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: Inter, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #0d1f32 0%, var(--bg) 45%);
+        color: var(--text);
+      }
+
+      .container {
+        width: min(1120px, 90vw);
+        margin: 0 auto;
+      }
+
+      header {
+        padding: 32px 0 18px;
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+      }
+
+      .brand-badge {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        color: #052b1d;
+        font-size: 22px;
+        box-shadow: 0 0 20px rgba(48, 208, 161, 0.4);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      .hero {
+        padding: 46px 0 30px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        background: rgba(48, 208, 161, 0.12);
+        border: 1px solid rgba(48, 208, 161, 0.3);
+        color: var(--primary);
+      }
+
+      h1 {
+        margin: 18px 0 16px;
+        font-size: clamp(2.2rem, 5vw, 4.2rem);
+        line-height: 1.05;
+      }
+
+      .lead {
+        margin: 0 0 24px;
+        font-size: 1.08rem;
+        line-height: 1.7;
+        color: var(--muted);
+        max-width: 640px;
+      }
+
+      .cta-row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 15px 22px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      .button:hover { transform: translateY(-1px); }
+
+      .button.primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        color: #032118;
+        box-shadow: 0 12px 25px rgba(48, 208, 161, 0.25);
+      }
+
+      .button.secondary {
+        background: rgba(255,255,255,0.04);
+        color: var(--text);
+        border: 1px solid rgba(255,255,255,0.12);
+      }
+
+      .mini-stats {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 0.96rem;
+      }
+
+      .mini-stats strong {
+        color: var(--text);
+        display: block;
+        font-size: 1.2rem;
+      }
+
+      .hero-card {
+        background: linear-gradient(180deg, rgba(16, 31, 45, 0.9), rgba(9, 18, 28, 0.95));
+        border: 1px solid rgba(94, 194, 255, 0.2);
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+      }
+
+      .status-box {
+        background: rgba(15, 25, 37, 0.9);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        padding: 18px 18px 12px;
+        margin-bottom: 16px;
+      }
+
+      .status-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .pill {
+        background: rgba(48, 208, 161, 0.18);
+        color: var(--primary);
+        border: 1px solid rgba(48, 208, 161, 0.25);
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 12px;
+      }
+
+      .site {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 18px 0 12px;
+        word-break: break-all;
+      }
+
+      .score-box {
+        background: rgba(12, 24, 36, 0.92);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        padding: 20px 18px;
+        text-align: center;
+      }
+
+      .score-box .label {
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .score {
+        font-size: clamp(2.2rem, 4vw, 4rem);
+        font-weight: 800;
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 8px;
+        margin: 10px 0;
+      }
+
+      .score .total {
+        font-size: 1.05rem;
+        color: var(--muted);
+      }
+
+      .score-text {
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+
+      section { padding: 32px 0; }
+
+      .section-title {
+        margin: 0 0 18px;
+        font-size: clamp(1.7rem, 3vw, 2.4rem);
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .feature-card {
+        background: rgba(15, 25, 37, 0.82);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        padding: 22px;
+      }
+
+      .feature-icon {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        font-size: 20px;
+        background: rgba(94, 194, 255, 0.08);
+        border: 1px solid rgba(94, 194, 255, 0.22);
+        margin-bottom: 14px;
+      }
+
+      .feature-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+      }
+
+      .feature-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .flow-step {
+        background: rgba(15, 25, 37, 0.8);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        padding: 20px 18px;
+      }
+
+      .step-num {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 14px;
+        border-radius: 10px;
+        font-weight: 800;
+        background: rgba(48, 208, 161, 0.15);
+        color: var(--primary);
+      }
+
+      .flow-step h4 {
+        margin: 0 0 10px;
+      }
+
+      .flow-step p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .impact {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+      }
+
+      .impact-card {
+        background: rgba(15, 25, 37, 0.8);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        padding: 22px;
+      }
+
+      .impact-card ul {
+        margin: 14px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+        line-height: 1.9;
+      }
+
+      footer {
+        padding: 28px 0 60px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      @media (max-width: 900px) {
+        .hero-grid,
+        .feature-grid,
+        .flow,
+        .impact {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav>
+          <div class="brand">
+            <div class="brand-badge">🛡️</div>
+            <span>CYBERSHIELD</span>
+          </div>
+          <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#workflow">Workflow</a>
+            <a href="#impact">Impact</a>
+            <a href="https://github.com/anshsaini208/cyberShield" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow">REAL-TIME BROWSER SECURITY</div>
+            <h1>Stop phishing before the user clicks.</h1>
+            <p class="lead">
+              CyberShield is a browser extension that detects phishing, credential-harvesting,
+              and suspicious login flows in real time. It analyzes the current webpage and warns
+              users before they enter sensitive information.
+            </p>
+            <div class="cta-row">
+              <a class="button primary" href="https://github.com/anshsaini208/cyberShield" target="_blank" rel="noreferrer">View Project</a>
+              <a class="button secondary" href="#features">See Features</a>
+            </div>
+            <div class="mini-stats">
+              <div>
+                <strong>Live</strong>
+                Real-time detection
+              </div>
+              <div>
+                <strong>Smart</strong>
+                Risk scoring engine
+              </div>
+              <div>
+                <strong>Clear</strong>
+                Evidence-driven alerts
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-card">
+            <div class="status-box">
+              <div class="status-header">
+                <span>Current Website</span>
+                <span class="pill">SAFE</span>
+              </div>
+              <div class="site">http://localhost:5174/demo/safe_mock.html</div>
+            </div>
+
+            <div class="score-box">
+              <div class="label">Risk Score</div>
+              <div class="score">
+                <span>0</span>
+                <span class="total">/ 100</span>
+              </div>
+              <div class="score-text">Standard Protection Active</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features">
+        <h2 class="section-title">What CyberShield does</h2>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon">🔎</div>
+            <h3>Phishing Detection</h3>
+            <p>
+              Detects fake login pages, impersonation patterns, and suspicious brand look-alike domains.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">🧾</div>
+            <h3>Credential Protection</h3>
+            <p>
+              Identifies password fields, login forms, and cross-origin submissions that may be stealing credentials.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Evidence & Risk Scoring</h3>
+            <p>
+              Calculates a risk score and explains why a page is dangerous through clear, explainable signals.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow">
+        <h2 class="section-title">How it works</h2>
+        <div class="flow">
+          <div class="flow-step">
+            <div class="step-num">1</div>
+            <h4>Inspect Page</h4>
+            <p>The browser content script checks the active webpage and its form structure.</p>
+          </div>
+
+          <div class="flow-step">
+            <div class="step-num">2</div>
+            <h4>Analyze Signals</h4>
+            <p>It evaluates URL patterns, domain similarity, hidden iframes, redirects, and form actions.</p>
+          </div>
+
+          <div class="flow-step">
+            <div class="step-num">3</div>
+            <h4>Score Threats</h4>
+            <p>The detection engine assigns a risk score and identifies the threat type.</p>
+          </div>
+
+          <div class="flow-step">
+            <div class="step-num">4</div>
+            <h4>Warn User</h4>
+            <p>The popup and evidence panel explain the risk before sensitive data can be entered.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="impact">
+        <h2 class="section-title">Why this matters</h2>
+        <div class="impact">
+          <div class="impact-card">
+            <h3>Problem</h3>
+            <ul>
+              <li>Phishing websites often look nearly identical to trusted sites.</li>
+              <li>Users rely on memory and instinct rather than real-time protection.</li>
+              <li>Credential theft can happen within seconds after a page loads.</li>
+            </ul>
+          </div>
+
+          <div class="impact-card">
+            <h3>Impact</h3>
+            <ul>
+              <li>Reduces successful phishing attempts before credential entry.</li>
+              <li>Improves user awareness using clear risk explanations.</li>
+              <li>Creates a proactive defense layer for safer browsing.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      CyberShield — Real-time browser protection against phishing and credential theft.
+    </footer>
+  </body>
+</html>
