@@ -2,7 +2,6 @@
 
 > **Project Concept:** CyberShield — A Personal Security Operations Center (SOC) in the Browser  
 > **Target Platform:** Chrome Extension (Manifest V3) + FastAPI AI Backend Proxy  
-> **Hackathon Timeline:** 24 Hours  
 > **Core Pipeline:** DETECT → EXPLAIN → PROTECT → RECORD  
 
 ---
