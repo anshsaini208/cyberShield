@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PayPal Account Verification — Harmless CyberShield Phishing Simulation</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; padding: 40px; }
+    .card { background: #1e293b; padding: 28px; border-radius: 12px; max-width: 480px; margin: 0 auto; border: 1px solid #ef4444; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2); }
+    h1 { color: #f87171; font-size: 20px; }
+    label { display: block; margin-top: 12px; font-size: 13px; color: #94a3b8; }
+    input { width: 100%; padding: 10px; margin-top: 4px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #fff; box-sizing: border-box; }
+    button { width: 100%; margin-top: 20px; padding: 12px; background: #dc2626; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .warning { background: #451a1a; color: #fca5a5; padding: 12px; border-radius: 8px; font-size: 12px; margin-bottom: 16px; border: 1px solid #991b1b; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="warning">
+      ⚠️ <strong>HACKATHON DEMO SIMULATION PAGE:</strong> Harmless test environment for CyberShield heuristic detection engine. Form submission is disabled.
+    </div>
+
+    <h1>Security Alert: Verify Your Account</h1>
+    <p style="font-size: 13px; color: #cbd5e1;">Please log in below to confirm your security credentials.</p>
+
+    <!-- Harmless simulation form pointing cross-origin to an IP address target -->
+    <form action="http://192.168.1.100/simulate_harvest" method="POST" onsubmit="alert('Demo form submission intercepted and blocked!'); return false;">
+      <label>Email address</label>
+      <input type="email" placeholder="user@example.com" autocomplete="off" />
+
+      <label>Password</label>
+      <input type="password" placeholder="••••••••••••" autocomplete="off" />
+
+      <button type="submit">Verify & Log In</button>
+    </form>
+
+    <!-- Hidden iframe indicator for threat scanner test -->
+    <iframe src="about:blank" style="display:none; width:0; height:0;" title="Hidden Test Frame"></iframe>
+  </div>
+</body>
+</html>

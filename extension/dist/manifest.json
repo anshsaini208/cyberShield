@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "CyberShield — Personal Browser SOC",
+  "short_name": "CyberShield",
+  "version": "0.1.0",
+  "description": "A Personal Security Operations Center (SOC) in the browser for threat visibility, evidence explanation, and credential protection.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "CyberShield SOC"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "dashboard.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}

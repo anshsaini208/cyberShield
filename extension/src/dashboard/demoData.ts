@@ -1,0 +1,303 @@
+/**
+ * CyberShield Demo Data
+ * ---------------------
+ * Used ONLY when settings.demoMode === true.
+ * All entries use the exact same types as production incidents.
+ * All hostnames end in .example to prevent real navigation.
+ * No real passwords, tokens, or credentials are present.
+ */
+import {
+  SecurityIncident,
+  RiskSeverity,
+  ThreatType,
+  SignalCategory,
+  SignalSeverity,
+} from '../types/security';
+
+const BASE = Date.now() - 6 * 24 * 60 * 60 * 1000; // 6 days ago base
+
+export const DEMO_INCIDENTS: SecurityIncident[] = [
+  {
+    id: 'demo_safe_001',
+    createdAt: BASE,
+    updatedAt: BASE,
+    timestamp: BASE,
+    url: 'https://news.example/article/technology',
+    hostname: 'news.example',
+    domain: 'news.example',
+    status: 'RESOLVED',
+    severity: RiskSeverity.LOW,
+    threatType: ThreatType.SAFE,
+    riskScore: {
+      score: 12,
+      severity: RiskSeverity.LOW,
+      breakdown: { urlScore: 2, domainScore: 4, pageScore: 4, redirectScore: 1, credentialScore: 1 },
+    },
+    signals: [
+      {
+        id: 'demo_sig_001',
+        category: SignalCategory.URL,
+        severity: SignalSeverity.LOW,
+        weight: 5,
+        title: 'Short-lived TLD (.example)',
+        description: 'Domain uses a known generic TLD.',
+        evidence: [{ key: 'tld', value: '.example' }],
+        confidence: 0.3,
+        timestamp: BASE,
+      },
+    ],
+    events: [
+      {
+        id: 'demo_evt_001',
+        incidentId: 'demo_safe_001',
+        timestamp: BASE,
+        eventType: 'SIGNAL_DETECTED',
+        details: 'Low-risk scan completed (score: 12/100)',
+      },
+    ],
+  },
+  {
+    id: 'demo_suspicious_002',
+    createdAt: BASE + 1 * 24 * 60 * 60 * 1000,
+    updatedAt: BASE + 1 * 24 * 60 * 60 * 1000,
+    timestamp: BASE + 1 * 24 * 60 * 60 * 1000,
+    url: 'https://free-giveaway.example/claim?ref=email',
+    hostname: 'free-giveaway.example',
+    domain: 'free-giveaway.example',
+    status: 'DISMISSED',
+    severity: RiskSeverity.MEDIUM,
+    threatType: ThreatType.SUSPICIOUS,
+    riskScore: {
+      score: 38,
+      severity: RiskSeverity.MEDIUM,
+      breakdown: { urlScore: 18, domainScore: 10, pageScore: 8, redirectScore: 2, credentialScore: 0 },
+    },
+    signals: [
+      {
+        id: 'demo_sig_002a',
+        category: SignalCategory.URL,
+        severity: SignalSeverity.MEDIUM,
+        weight: 15,
+        title: 'Suspicious Keyword in URL',
+        description: 'URL contains the keyword "free" which is commonly used in lure pages.',
+        evidence: [{ key: 'keyword', value: 'free' }],
+        confidence: 0.6,
+        timestamp: BASE + 1 * 24 * 60 * 60 * 1000,
+      },
+      {
+        id: 'demo_sig_002b',
+        category: SignalCategory.URL,
+        severity: SignalSeverity.LOW,
+        weight: 10,
+        title: 'Query Parameter: ref=email',
+        description: 'Tracking parameters suggest email-based phishing campaign.',
+        evidence: [{ key: 'param', value: 'ref=email' }],
+        confidence: 0.4,
+        timestamp: BASE + 1 * 24 * 60 * 60 * 1000,
+      },
+    ],
+    events: [
+      {
+        id: 'demo_evt_002',
+        incidentId: 'demo_suspicious_002',
+        timestamp: BASE + 1 * 24 * 60 * 60 * 1000,
+        eventType: 'WARNING_SHOWN',
+        details: 'Suspicious indicators detected (score: 38/100)',
+      },
+    ],
+  },
+  {
+    id: 'demo_phishing_003',
+    createdAt: BASE + 3 * 24 * 60 * 60 * 1000,
+    updatedAt: BASE + 3 * 24 * 60 * 60 * 1000,
+    timestamp: BASE + 3 * 24 * 60 * 60 * 1000,
+    url: 'https://secure-bank-login.example/verify-account',
+    hostname: 'secure-bank-login.example',
+    domain: 'secure-bank-login.example',
+    status: 'OPEN',
+    severity: RiskSeverity.HIGH,
+    threatType: ThreatType.PHISHING,
+    riskScore: {
+      score: 67,
+      severity: RiskSeverity.HIGH,
+      breakdown: { urlScore: 25, domainScore: 20, pageScore: 15, redirectScore: 4, credentialScore: 3 },
+    },
+    signals: [
+      {
+        id: 'demo_sig_003a',
+        category: SignalCategory.URL,
+        severity: SignalSeverity.HIGH,
+        weight: 25,
+        title: 'Brand Impersonation in Domain',
+        description: 'Domain contains "secure-bank" — a brand impersonation pattern.',
+        evidence: [{ key: 'pattern', value: 'secure-bank' }, { key: 'domain', value: 'secure-bank-login.example' }],
+        confidence: 0.85,
+        timestamp: BASE + 3 * 24 * 60 * 60 * 1000,
+      },
+      {
+        id: 'demo_sig_003b',
+        category: SignalCategory.PAGE,
+        severity: SignalSeverity.MEDIUM,
+        weight: 20,
+        title: 'Phishing Keyword in Page',
+        description: 'Page title or content contains "verify account".',
+        evidence: [{ key: 'keyword', value: 'verify-account' }],
+        confidence: 0.75,
+        timestamp: BASE + 3 * 24 * 60 * 60 * 1000,
+      },
+    ],
+    events: [
+      {
+        id: 'demo_evt_003',
+        incidentId: 'demo_phishing_003',
+        timestamp: BASE + 3 * 24 * 60 * 60 * 1000,
+        eventType: 'INTERSTITIAL_TRIGGERED',
+        details: 'Protection Mode activated (score: 67/100 HIGH)',
+      },
+    ],
+  },
+  {
+    id: 'demo_credential_004',
+    createdAt: BASE + 4 * 24 * 60 * 60 * 1000,
+    updatedAt: BASE + 4 * 24 * 60 * 60 * 1000,
+    timestamp: BASE + 4 * 24 * 60 * 60 * 1000,
+    url: 'https://myaccount-signin.example/login',
+    hostname: 'myaccount-signin.example',
+    domain: 'myaccount-signin.example',
+    status: 'OPEN',
+    severity: RiskSeverity.CRITICAL,
+    threatType: ThreatType.CREDENTIAL_HARVESTING,
+    riskScore: {
+      score: 84,
+      severity: RiskSeverity.CRITICAL,
+      breakdown: { urlScore: 20, domainScore: 20, pageScore: 15, redirectScore: 5, credentialScore: 24 },
+    },
+    signals: [
+      {
+        id: 'demo_sig_004a',
+        category: SignalCategory.CREDENTIAL,
+        severity: SignalSeverity.CRITICAL,
+        weight: 30,
+        title: 'Cross-Origin Credential Form',
+        description: 'Login form submits credentials to a different origin.',
+        evidence: [
+          { key: 'Current origin', value: 'myaccount-signin.example' },
+          { key: 'Form action origin', value: 'collector.malicious.example' },
+        ],
+        confidence: 0.95,
+        timestamp: BASE + 4 * 24 * 60 * 60 * 1000,
+        target: { type: 'FORM', selector: 'form#login' },
+      },
+      {
+        id: 'demo_sig_004b',
+        category: SignalCategory.URL,
+        severity: SignalSeverity.HIGH,
+        weight: 20,
+        title: 'Credential-Lure Domain Pattern',
+        description: 'Domain contains "signin" and "myaccount" — common credential phishing patterns.',
+        evidence: [{ key: 'domain', value: 'myaccount-signin.example' }],
+        confidence: 0.88,
+        timestamp: BASE + 4 * 24 * 60 * 60 * 1000,
+      },
+    ],
+    events: [
+      {
+        id: 'demo_evt_004a',
+        incidentId: 'demo_credential_004',
+        timestamp: BASE + 4 * 24 * 60 * 60 * 1000,
+        eventType: 'CREDENTIAL_CONTEXT_DETECTED',
+        details: 'Password field detected with cross-origin form action',
+      },
+      {
+        id: 'demo_evt_004b',
+        incidentId: 'demo_credential_004',
+        timestamp: BASE + 4 * 24 * 60 * 60 * 1000 + 2000,
+        eventType: 'CREDENTIAL_WARNING_SHOWN',
+        details: 'Credential Guard warning displayed to user',
+      },
+    ],
+    aiExplanation: {
+      id: 'demo_ai_004',
+      analysisId: 'demo_credential_004',
+      summary:
+        'This page shows multiple high-confidence indicators of credential harvesting. The login form submits to a completely different domain than the page origin — a classic phishing technique.',
+      whatDetected:
+        '• Cross-origin credential form (weight: 30, confidence: 95%)\n• Credential-lure domain pattern in URL (weight: 20, confidence: 88%)',
+      whyItMatters:
+        'If you submit your credentials on this page, they will be sent to a third-party server (collector.malicious.example), not to a legitimate service you trust.',
+      potentialImpact:
+        'Account takeover, identity theft, or financial fraud if real credentials are entered.',
+      recommendedActions: [
+        'Do not enter any login credentials on this page.',
+        'Navigate directly to the official website by typing the URL in the address bar.',
+        'If you already submitted credentials, change your password immediately.',
+      ],
+      generatedAt: BASE + 4 * 24 * 60 * 60 * 1000 + 5000,
+      isFallback: false,
+      confidenceNote:
+        'This explanation is grounded in deterministic signals from the CyberShield detection engine.',
+      evidenceReferences: ['demo_sig_004a', 'demo_sig_004b'],
+    },
+  },
+  {
+    id: 'demo_critical_005',
+    createdAt: BASE + 5 * 24 * 60 * 60 * 1000,
+    updatedAt: BASE + 5 * 24 * 60 * 60 * 1000,
+    timestamp: BASE + 5 * 24 * 60 * 60 * 1000,
+    url: 'https://paypa1-secure.example/confirm?session=abc123',
+    hostname: 'paypa1-secure.example',
+    domain: 'paypa1-secure.example',
+    status: 'OPEN',
+    severity: RiskSeverity.CRITICAL,
+    threatType: ThreatType.PHISHING,
+    riskScore: {
+      score: 91,
+      severity: RiskSeverity.CRITICAL,
+      breakdown: { urlScore: 30, domainScore: 28, pageScore: 20, redirectScore: 8, credentialScore: 5 },
+    },
+    signals: [
+      {
+        id: 'demo_sig_005a',
+        category: SignalCategory.DOMAIN,
+        severity: SignalSeverity.CRITICAL,
+        weight: 30,
+        title: 'Homograph Brand Impersonation',
+        description: 'Domain uses digit "1" in place of letter "l" to impersonate a known brand.',
+        evidence: [{ key: 'spoofed', value: 'paypa1-secure.example' }, { key: 'target brand', value: 'PayPal' }],
+        confidence: 0.96,
+        timestamp: BASE + 5 * 24 * 60 * 60 * 1000,
+      },
+      {
+        id: 'demo_sig_005b',
+        category: SignalCategory.URL,
+        severity: SignalSeverity.HIGH,
+        weight: 25,
+        title: 'Session Token in URL',
+        description: 'URL includes a session parameter which may be used to track victims.',
+        evidence: [{ key: 'param', value: 'session=abc123' }],
+        confidence: 0.7,
+        timestamp: BASE + 5 * 24 * 60 * 60 * 1000,
+      },
+      {
+        id: 'demo_sig_005c',
+        category: SignalCategory.PAGE,
+        severity: SignalSeverity.HIGH,
+        weight: 20,
+        title: 'Phishing Keywords in Content',
+        description: 'Page contains "confirm" and "secure" — urgency-inducing phishing language.',
+        evidence: [{ key: 'keywords', value: 'confirm, secure' }],
+        confidence: 0.8,
+        timestamp: BASE + 5 * 24 * 60 * 60 * 1000,
+      },
+    ],
+    events: [
+      {
+        id: 'demo_evt_005',
+        incidentId: 'demo_critical_005',
+        timestamp: BASE + 5 * 24 * 60 * 60 * 1000,
+        eventType: 'INTERSTITIAL_TRIGGERED',
+        details: 'Critical protection interstitial shown (score: 91/100)',
+      },
+    ],
+  },
+];

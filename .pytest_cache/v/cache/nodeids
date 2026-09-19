@@ -1,0 +1,6 @@
+[
+  "backend/tests/test_explain.py::test_explain_endpoint_fallback",
+  "backend/tests/test_explain.py::test_health_endpoint",
+  "backend/tests/test_explain.py::test_local_fallback_service",
+  "backend/tests/test_explain.py::test_prompt_injection_defense"
+]
